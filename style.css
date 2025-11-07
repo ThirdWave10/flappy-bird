@@ -1,0 +1,30 @@
+body {
+  margin: 0;
+  background: linear-gradient(to bottom, #a0c8f0 0%, #e0e7f3 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  user-select: none;
+  overflow: hidden;
+}
+
+#gameCanvas {
+  background: #7ec0ee;
+  border-radius: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+  display: block;
+}
+
+#score {
+  position: absolute;
+  top: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  color: #222;
+  text-shadow: 1px 1px 2px #fff;
+  user-select: none;
+  pointer-events: none;
+}

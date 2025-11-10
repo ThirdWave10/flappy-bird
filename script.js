@@ -1,39 +1,54 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
-const flapSound = document.getElementById("flapSound");
 
-const birdImg = new Image();
-birdImg.src = "https://i.imgur.com/YukgR6W.png"; // Shogun-style bird sprite
+let bird, pipes, frame, score, highScore, gameOver;
 
-let bird = { x: 80, y: 300, width: 34, height: 24, gravity: 0.4, lift: -8, velocity: 0 };
-let pipes = [];
-let frame = 0;
-let score = 0;
-let gameOver = false;
+function resetGame() {
+  bird = { x: 60, y: 150, width: 34, height: 24, gravity: 0.5, lift: -8, velocity: 0 };
+  pipes = [];
+  frame = 0;
+  score = 0;
+  gameOver = false;
+  document.getElementById("gameOver").classList.add("hidden");
+  update();
+}
+
+function loadHighScore() {
+  highScore = localStorage.getItem("flappyHighScore") || 0;
+}
+
+function saveHighScore() {
+  if (score > highScore) {
+    highScore = score;
+    localStorage.setItem("flappyHighScore", highScore);
+  }
+}
 
 function drawBird() {
-  ctx.drawImage(birdImg, bird.x, bird.y, bird.width, bird.height);
+  ctx.fillStyle = "yellow";
+  ctx.fillRect(bird.x, bird.y, bird.width, bird.height);
 }
 
 function drawPipes() {
-  ctx.fillStyle = "#4a2c2a";
-  for (let p of pipes) {
+  ctx.fillStyle = "green";
+  pipes.forEach(p => {
     ctx.fillRect(p.x, 0, 50, p.top);
     ctx.fillRect(p.x, canvas.height - p.bottom, 50, p.bottom);
-  }
+  });
 }
 
 function drawScore() {
   ctx.fillStyle = "white";
   ctx.font = "24px Trebuchet MS";
-  ctx.fillText("Score: " + score, 10, 30);
+  ctx.fillText(`Score: ${score}`, 10, 30);
+  ctx.fillText(`High: ${highScore}`, 300, 30);
 }
 
 function update() {
   if (gameOver) return;
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+
   bird.velocity += bird.gravity;
   bird.y += bird.velocity;
 
@@ -43,12 +58,14 @@ function update() {
     pipes.push({ x: canvas.width, top, bottom: canvas.height - top - gap });
   }
 
-  for (let p of pipes) {
+  pipes.forEach(p => {
     p.x -= 2;
-    if (p.x + 50 === bird.x) score++;
-  }
+  });
 
-  // Collision detection
+  // Remove off-screen pipes
+  pipes = pipes.filter(p => p.x + 50 > 0);
+
+  // Check collisions
   for (let p of pipes) {
     if (
       bird.x < p.x + 50 &&
@@ -60,10 +77,16 @@ function update() {
     }
   }
 
-  if (bird.y + bird.height > canvas.height || bird.y < 0) {
+  // Floor or ceiling
+  if (bird.y + bird.height >= canvas.height || bird.y <= 0) {
     triggerGameOver();
     return;
   }
+
+  // Score
+  pipes.forEach(p => {
+    if (p.x + 50 === bird.x) score++;
+  });
 
   drawPipes();
   drawBird();
@@ -76,30 +99,24 @@ function update() {
 function flap() {
   if (gameOver) return;
   bird.velocity = bird.lift;
-  flapSound.currentTime = 0;
-  flapSound.play();
 }
 
 function triggerGameOver() {
   gameOver = true;
-  document.getElementById("gameOver").classList.remove("hidden");
-}
+  saveHighScore();
 
-function restartGame() {
-  bird.y = 300;
-  bird.velocity = 0;
-  pipes = [];
-  frame = 0;
-  score = 0;
-  gameOver = false;
-  document.getElementById("gameOver").classList.add("hidden");
-  update();
+  document.getElementById("scoreDisplay").innerText = `Score: ${score}`;
+  document.getElementById("highScoreDisplay").innerText = `High Score: ${highScore}`;
+  document.getElementById("gameOver").classList.remove("hidden");
 }
 
 document.addEventListener("keydown", e => {
   if (e.code === "Space") flap();
 });
-canvas.addEventListener("mousedown", flap);
-document.getElementById("restartBtn").addEventListener("click", restartGame);
 
-birdImg.onload = update;
+canvas.addEventListener("mousedown", flap);
+document.getElementById("restartBtn").addEventListener("click", resetGame);
+
+// Initialize game
+loadHighScore();
+resetGame();

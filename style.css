@@ -1,30 +1,37 @@
-body {
+html, body {
+  height: 100%;
   margin: 0;
-  background: linear-gradient(to bottom, #a0c8f0 0%, #e0e7f3 100%);
+  background: #88c7ff;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+.wrap {
   display: flex;
-  justify-content: center;
   align-items: center;
-  height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  user-select: none;
-  overflow: hidden;
+  justify-content: center;
+  height: 100%;
 }
 
-#gameCanvas {
-  background: #7ec0ee;
-  border-radius: 15px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-  display: block;
+canvas {
+  background: linear-gradient(#90d4ff, #66b7ff);
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
-#score {
-  position: absolute;
-  top: 15px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 28px;
-  color: #222;
-  text-shadow: 1px 1px 2px #fff;
-  user-select: none;
+.ui {
+  position: fixed;
+  left: 16px;
+  top: 16px;
+  color: #05324a;
+  font-weight: 700;
+}
+
+.hint {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 48%;
+  text-align: center;
+  color: #024055;
   pointer-events: none;
 }

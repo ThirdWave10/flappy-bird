@@ -3,22 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flappy Shogun</title>
+  <title>Flappy Bird</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <div id="gameContainer">
     <canvas id="gameCanvas" width="400" height="600"></canvas>
     <div id="gameOver" class="hidden">
-      <h2>💀 Game Over</h2>
+      <h2>Game Over</h2>
+      <p id="scoreDisplay">Score: 0</p>
+      <p id="highScoreDisplay">High Score: 0</p>
       <button id="restartBtn">Restart</button>
     </div>
   </div>
 
-  <audio id="flapSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_48c3e7a16b.mp3"></audio>
-
   <script src="script.js"></script>
 </body>
 </html>
+
 
 
